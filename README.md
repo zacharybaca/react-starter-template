@@ -1,12 +1,39 @@
-# React + Vite
+# Baca React Starter
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+🚀 **A modern React + Vite starter template** — fast, minimal, and pre-configured with ESLint, Prettier, and VS Code workspace settings. No clutter. No nonsense. Just clean, scalable React development.
 
-Currently, two official plugins are available:
+---
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## 📦 **Included**
 
-## Expanding the ESLint configuration
+- ⚡️ [Vite](https://vitejs.dev/) for lightning-fast bundling
+- ⚛️ React with JSX / TSX support (adjust as needed)
+- 🧹 ESLint with sensible React defaults
+- 🎨 Prettier for consistent formatting
+- ⚙️ VS Code `.vscode/settings.json` for tab size, lint on save, format on save
+- ✅ `.gitignore` to keep your repo clean
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+---
+
+## 🚀 **Quick Start**
+
+```bash
+# Clone this repo
+git clone https://github.com/zacharybaca/baca-react-starter.git your-new-project
+cd your-new-project
+
+# Remove git history
+rm -rf .git
+
+# Initialize your own git repo
+git init
+git remote add origin <your-new-repo-url>
+git add .
+git commit -m "Initial commit"
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+```
