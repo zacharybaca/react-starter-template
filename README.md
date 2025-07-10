@@ -38,7 +38,7 @@ npm install
 npm run dev
 ```
 
-⚙️ Scripts
+## ⚙️ **Scripts**
 
 | Command           | Description                |
 | ----------------- | -------------------------- |
@@ -48,7 +48,7 @@ npm run dev
 | `npm run lint`    | Lint your code with ESLint |
 
 
-🗂️ Recommended VS Code Extensions
+## 🗂️ **Recommended VS Code Extensions**
 
 - ESLint
 - Prettier-Code formatter
@@ -57,7 +57,7 @@ npm run dev
 - Path Intellisense
 - Bracket Pair Colorizer 2
 
-🔒 License
+## 🔒 **License**
 
 MIT — feel free to fork, modify, and share.
 Built and maintained by Zachary Baca 🚀
