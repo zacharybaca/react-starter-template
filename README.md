@@ -37,3 +37,27 @@ npm install
 # Start development server
 npm run dev
 ```
+
+⚙️ Scripts
+
+| Command           | Description                |
+| ----------------- | -------------------------- |
+| `npm run dev`     | Start local dev server     |
+| `npm run build`   | Build production-ready app |
+| `npm run preview` | Preview built app locally  |
+| `npm run lint`    | Lint your code with ESLint |
+
+
+🗂️ Recommended VS Code Extensions
+
+- ESLint
+- Prettier-Code formatter
+- Reactjs code snippets
+- GitLens
+- Path Intellisense
+- Bracket Pair Colorizer 2
+
+🔒 License
+
+MIT — feel free to fork, modify, and share.
+Built and maintained by Zachary Baca 🚀
