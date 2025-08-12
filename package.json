@@ -9,6 +9,15 @@
     "lint": "eslint .",
     "preview": "vite preview"
   },
+  "lint-staged": {
+    "**/*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "**/*.{json,md,css,html}": [
+      "prettier --write"
+    ]
+  },
   "dependencies": {
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
