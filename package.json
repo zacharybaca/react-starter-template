@@ -7,7 +7,10 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "format": "prettier \"**/*.{js,jsx,json,md,css}\" --write",
+    "prepare": "husky",
+    "reset": "rm -rf node_modules package-lock.json && npm cache clean --force && npm install"
   },
   "lint-staged": {
     "**/*.{js,jsx,ts,tsx}": [
