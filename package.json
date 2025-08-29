@@ -2,10 +2,9 @@
   "name": "react-starter-template",
   "version": "1.0.0",
   "description": "🚀 **A modern React + Vite starter template** — fast, minimal, and pre-configured with ESLint, Prettier, and VS Code workspace settings. No clutter. No nonsense. Just clean, scalable React development.",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "dev": "concurrently \"npm run dev --prefix client\" \"npm run dev --prefix server\""
+},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/zacharybaca/react-starter-template.git"
