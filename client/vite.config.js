@@ -7,10 +7,18 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5173,
+    // --- ADD THIS PROXY SECTION ---
+    proxy: {
+      '/api': {
+        target: 'http://localhost:5000', // Your Express Backend Port
+        changeOrigin: true,
+        secure: false,
+      },
+    },
+    // ------------------------------
     mimeTypes: {
       webmanifest: 'application/manifest+json',
     }
-    // fs: { strict: false } // Only uncomment if importing outside root
   },
   build: {
     outDir: 'dist',          // Where Render will serve from
