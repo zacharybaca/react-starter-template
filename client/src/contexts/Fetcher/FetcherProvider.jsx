@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { FetcherContext } from './FetcherContext.jsx';
-import { useAuth } from '../../hooks/useAuth.js';
+// import { useAuth } from '../../hooks/useAuth.js';
 
 export const FetcherProvider = ({ children }) => {
   const [isLoaded, setIsLoaded] = useState(false);

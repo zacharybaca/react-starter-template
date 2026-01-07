@@ -24,7 +24,6 @@ const Layout = () => {
 
 function App() {
   return (
-    <Router>
       <Routes>
         {/* Wrap all routes in the Layout */}
         <Route path="/" element={<Layout />}>
@@ -36,7 +35,6 @@ function App() {
           <Route path="*" element={<div className="page-content"><h2>404: Page Not Found</h2></div>} />
         </Route>
       </Routes>
-    </Router>
   );
 }
 

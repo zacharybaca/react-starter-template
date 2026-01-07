@@ -5,9 +5,7 @@ import { FetcherProvider } from './Fetcher/FetcherProvider';
 export const AppProvider = ({ children }) => {
   return (
     <Router>
-      <FetcherProvider>
-        {children}
-      </FetcherProvider>
+      {children}
     </Router>
   )
 }
