@@ -45,24 +45,22 @@ Run the automated script to install dependencies for **Root**, **Client**, and *
 
 ```bash
 npm run install-all
+```
 
 ## Environment Setup
-Create a .env file in the server directory:
-PORT=5000
-MONGO_URI=mongodb://localhost:27017/your_database_name
-CLIENT_URL=http://localhost:5173
 
-## Run Development Server
-Start the entire stack (Frontend + Backend) with one command:
+Create a .env file in the server directory:
 
 ```bash
 npm run dev
+```
 
-Frontend: http://localhost:5173
+Frontend: [http://localhost:5173](http://localhost:5173)
 
-Backend: http://localhost:5000
+Backend: [http://localhost:5000](http://localhost:5000)
 
 ## Project Structure
+
 react-starter-template/
 ├── client/                 # React (Vite) Frontend
 │   ├── src/
@@ -82,6 +80,7 @@ react-starter-template/
 └── package.json            # Root scripts
 
 ## 🛠 Tech Stack
+
 | Domain   | Technology                           |
 |----------|--------------------------------------|
 | Frontend | React 19, Vite, Axios, React Router v7 |
