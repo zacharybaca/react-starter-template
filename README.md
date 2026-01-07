@@ -1,63 +1,90 @@
-# Baca React Starter
+# 🚀 MERN Stack Boilerplate (Vite + Express)
 
-🚀 **A modern React + Vite starter template** — fast, minimal, and pre-configured with ESLint, Prettier, and VS Code workspace settings. No clutter. No nonsense. Just clean, scalable React development.
+A production-ready **MERN (MongoDB, Express, React, Node.js)** starter template designed for scalability and developer experience.
 
----
+It features a **Monorepo structure** with a unified "One-Command" startup, pre-configured **CORS & Proxy** for seamless client-server communication, and a robust **Error Handling** architecture.
 
-## 📦 **Included**
-
-- ⚡️ [Vite](https://vitejs.dev/) for lightning-fast bundling
-- ⚛️ React with JSX / TSX support (adjust as needed)
-- 🧹 ESLint with sensible React defaults
-- 🎨 Prettier for consistent formatting
-- ⚙️ VS Code `.vscode/settings.json` for tab size, lint on save, format on save
-- ✅ `.gitignore` to keep your repo clean
+![MERN Architecture](https://upload.wikimedia.org/wikipedia/commons/9/94/MERN-logo.png)
 
 ---
 
-## 🚀 **Quick Start**
+## ✨ Key Features
+
+### 🏗 Architecture
+
+- **Monorepo Setup:** Distinct `client` and `server` directories for clean separation of concerns.
+- **Concurrent Execution:** Boot both frontend and backend with a single command (`npm run dev`).
+- **MVC Backend:** Organized server structure (Models, Views/Routes, Controllers).
+- **Graceful Shutdown:** Handles `SIGINT` to close database connections cleanly.
+
+### ⚡️ Frontend (Client)
+
+- **Vite:** Lightning-fast HMR (Hot Module Replacement) and bundling.
+- **Axios Instance:** Centralized API configuration with `withCredentials: true` for secure cookie handling.
+- **Proxy Configured:** Zero CORS issues during development (`/api` requests are automatically proxied).
+- **Linting & Formatting:** ESLint + Prettier + Husky (pre-commit hooks) pre-installed.
+
+### 🛡 Backend (Server)
+
+- **Security First:** Configured `cors` to allow credentials from specific origins.
+- **Robust Error Handling:** Dedicated middleware to catch async errors and return standardized JSON responses.
+- **Database:** Mongoose setup with "Fail Fast" connection logic.
+
+---
+
+## 🚀 Getting Started
+
+### 1. Prerequisites
+
+- Node.js (v18+ recommended)
+- MongoDB (Running locally or via Atlas URI)
+
+### 2. Installation
+
+Run the automated script to install dependencies for **Root**, **Client**, and **Server** simultaneously:
 
 ```bash
-# Clone this repo
-git clone https://github.com/zacharybaca/baca-react-starter.git your-new-project
-cd your-new-project
+npm run install-all
 
-# Remove git history
-rm -rf .git
+## Environment Setup
+Create a .env file in the server directory:
+PORT=5000
+MONGO_URI=mongodb://localhost:27017/your_database_name
+CLIENT_URL=http://localhost:5173
 
-# Initialize your own git repo
-git init
-git remote add origin <your-new-repo-url>
-git add .
-git commit -m "Initial commit"
+## Run Development Server
+Start the entire stack (Frontend + Backend) with one command:
 
-# Install dependencies
-npm install
-
-# Start development server
+```bash
 npm run dev
-```
 
-## ⚙️ **Scripts**
+Frontend: http://localhost:5173
 
-| Command           | Description                |
-| ----------------- | -------------------------- |
-| `npm run dev`     | Start local dev server     |
-| `npm run build`   | Build production-ready app |
-| `npm run preview` | Preview built app locally  |
-| `npm run lint`    | Lint your code with ESLint |
+Backend: http://localhost:5000
 
+## Project Structure
+react-starter-template/
+├── client/                 # React (Vite) Frontend
+│   ├── src/
+│   │   ├── api/            # Centralized Axios instance
+│   │   ├── components/     # Reusable UI components
+│   │   ├── pages/          # Route views
+│   │   └── App.jsx
+│   └── vite.config.js      # Proxy configuration
+├── server/                 # Express Backend
+│   ├── config/             # DB Connection logic
+│   ├── controllers/        # Request logic
+│   ├── models/             # Mongoose Schemas
+│   ├── routes/             # API Endpoints
+│   ├── middleware/         # Error & Auth Middleware
+│   ├── app.js              # App Factory
+│   └── server.js           # Server Entry Point
+└── package.json            # Root scripts
 
-## 🗂️ **Recommended VS Code Extensions**
-
-- ESLint
-- Prettier-Code formatter
-- Reactjs code snippets
-- GitLens
-- Path Intellisense
-- Bracket Pair Colorizer 2
-
-## 🔒 **License**
-
-MIT — feel free to fork, modify, and share.
-Built and maintained by Zachary Baca 🚀
+## 🛠 Tech Stack
+| Domain   | Technology                           |
+|----------|--------------------------------------|
+| Frontend | React 19, Vite, Axios, React Router v7 |
+| Backend  | Node.js, Express, Mongoose          |
+| Database | MongoDB                             |
+| Tooling  | ESLint, Prettier, Concurrently, Nodemon |
