@@ -1,18 +1,22 @@
 import express from "express";
 import cors from "cors";
 import authRoutes from "./routes/authRoutes.js";
-import postRoutes from "./routes/postRoutes.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 
 const app = express();
 
+const corsOptions = {
+  // Allow requests from your Vite frontend
+  origin: process.env.CLIENT_URL || "http://localhost:5173",
+  credentials: true, // Critical for cookies/sessions
+};
+
 // Middleware
-app.use(cors());
+app.use(cors(corsOptions));
 app.use(express.json());
 
 // Routes
 app.use("/api/auth", authRoutes);
-app.use("/api/posts", postRoutes);
 
 // Error handling
 app.use(errorHandler);
