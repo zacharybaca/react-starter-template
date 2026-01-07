@@ -59,8 +59,9 @@ Frontend: [http://localhost:5173](http://localhost:5173)
 
 Backend: [http://localhost:5000](http://localhost:5000)
 
-## Project Structure
+## 📂 Project Structure
 
+```text
 react-starter-template/
 ├── client/                 # React (Vite) Frontend
 │   ├── src/
