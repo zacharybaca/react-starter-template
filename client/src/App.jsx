@@ -1,18 +1,17 @@
 import { BrowserRouter as Router, Routes, Route, Outlet } from "react-router-dom";
-import Header from "./components/Header/Header";
-import Footer from "./components/Footer/Footer";
+import NavBar from './components/Layout/NavBar/NavBar';
+import Footer from './components/Layout/Footer/Footer';
+import Login from './components/Auth/Login/Login';
+import Register from './components/Auth/Register/Register';
+import Home from './components/Pages/Home';
 import "./App.css";
 
-// Placeholder components for pages (until you create real ones in src/pages)
-const Home = () => <div className="page-content"><h2>Home Page</h2><p>Welcome to the MERN Starter.</p></div>;
-const Login = () => <div className="page-content"><h2>Login</h2><p>Login form goes here.</p></div>;
-const Register = () => <div className="page-content"><h2>Register</h2><p>Register form goes here.</p></div>;
 
 // The Layout Component: Wraps pages with Header and Footer
 const Layout = () => {
   return (
     <div className="app-container">
-      <Header />
+      <NavBar />
       <main className="main-content">
         {/* Outlet renders the child route's element (e.g., Home, Login) */}
         <Outlet />
