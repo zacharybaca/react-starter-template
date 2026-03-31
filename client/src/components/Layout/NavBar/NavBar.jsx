@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../hooks/useAuth.js';
-import JobJuryLogo from '../JobJuryLogo/JobJuryLogo.jsx';
 import './nav-bar.css';
 
 const NavBar = () => {
@@ -42,7 +41,7 @@ const NavBar = () => {
     <nav className="main-nav">
       <div className="nav-container">
         <Link to="/" className="nav-logo-link">
-          <JobJuryLogo className="nav-logo-svg" />
+          <h1>MERN Starter</h1>
         </Link>
 
         <ul className="nav-links">
