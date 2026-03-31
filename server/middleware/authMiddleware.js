@@ -1,31 +1,45 @@
-
 import jwt from "jsonwebtoken";
-import User from "../models/User.js"; // We need to create this model next!
 import asyncHandler from "express-async-handler";
+import User from "../models/User.js";
 
 const protect = asyncHandler(async (req, res, next) => {
-  let token;
-
-  // Check if the "jwt" cookie exists
-  token = req.cookies.jwt;
+  let token = req.cookies.jwt;
 
   if (token) {
     try {
-      // Verify the token using your secret key
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-
-      // Find the user but exclude the password field
       req.user = await User.findById(decoded.userId).select("-password");
 
-      next(); // Move to the next middleware/controller
+      // If a user was actually found, move to next
+      if (req.user) return next();
+
+      // If token was valid but user no longer exists in DB, fall through to soft-fail
     } catch (error) {
-      res.status(401);
-      throw new Error("Not authorized, invalid token");
+      // For any route OTHER than /me, a failed token is a hard 401
+      if (req.originalUrl !== "/api/users/me") {
+        res.status(401);
+        throw new Error("Not authorized, token failed");
+      }
     }
-  } else {
-    res.status(401);
-    throw new Error("Not authorized, no token");
   }
+
+  // SOFT-FAIL: If we are checking auth status (/me), allow the request
+  // to continue even if token is missing or invalid. req.user will just be null.
+  if (req.originalUrl === "/api/users/me") {
+    return next();
+  }
+
+  res.status(401);
+  throw new Error("Not authorized, no token");
 });
 
-export { protect };
+const admin = (req, res, next) => {
+  if (req.user && (req.user.isAdmin || req.user.role === "admin")) {
+    next();
+  } else {
+    res.status(403); // Forbidden
+    throw new Error("Not authorized as an admin");
+  }
+};
+
+export { protect, admin };
