@@ -2,14 +2,18 @@ import express from "express";
 import cors from "cors";
 import cookieParser from "cookie-parser";
 import authRoutes from "./routes/authRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
 import { errorHandler } from "./middleware/errorHandler.js";
 
 const app = express();
 
 const corsOptions = {
-  // Allow requests from your Vite frontend
-  origin: process.env.CLIENT_URL || "http://localhost:5173",
-  credentials: true, // Critical for cookies/sessions
+  origin: [
+    process.env.CLIENT_URL,
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+  ].filter(Boolean),
+  credentials: true,
 };
 
 // Middleware
@@ -20,6 +24,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/users", userRoutes);
 
 // Error handling
 app.use(errorHandler);
