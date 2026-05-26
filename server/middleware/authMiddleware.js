@@ -8,14 +8,11 @@ const protect = asyncHandler(async (req, res, next) => {
   if (token) {
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      // Ensure the payload key matches your generateToken utility (usually userId)
       req.user = await User.findById(decoded.userId).select("-password");
 
-      // If a user was actually found, move to next
       if (req.user) return next();
-
-      // If token was valid but user no longer exists in DB, fall through to soft-fail
     } catch (error) {
-      // For any route OTHER than /me, a failed token is a hard 401
       if (req.originalUrl !== "/api/users/me") {
         res.status(401);
         throw new Error("Not authorized, token failed");
@@ -23,8 +20,6 @@ const protect = asyncHandler(async (req, res, next) => {
     }
   }
 
-  // SOFT-FAIL: If we are checking auth status (/me), allow the request
-  // to continue even if token is missing or invalid. req.user will just be null.
   if (req.originalUrl === "/api/users/me") {
     return next();
   }
@@ -33,13 +28,24 @@ const protect = asyncHandler(async (req, res, next) => {
   throw new Error("Not authorized, no token");
 });
 
+// For strictly Admin-only routes (e.g., Company management)
 const admin = (req, res, next) => {
-  if (req.user && (req.user.isAdmin || req.user.role === "admin")) {
+  if (req.user && (req.user.isAdmin || req.user.role === "Admin")) {
     next();
   } else {
-    res.status(403); // Forbidden
+    res.status(403);
     throw new Error("Not authorized as an admin");
   }
 };
 
-export { protect, admin };
+// NEW: For Manager-only or Admin access (e.g., Article Approvals)
+const manager = (req, res, next) => {
+  if (req.user && (req.user.role === "Manager" || req.user.role === "Admin")) {
+    next();
+  } else {
+    res.status(403);
+    throw new Error("Access denied. Manager role required.");
+  }
+};
+
+export { protect, admin, manager };
