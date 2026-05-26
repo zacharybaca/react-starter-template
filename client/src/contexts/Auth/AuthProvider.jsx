@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { useFetcher } from '../../hooks/useFetcher.js';
 import { AuthContext } from './AuthContext.jsx';
 
@@ -13,20 +13,21 @@ export const AuthProvider = ({ children }) => {
    * whenever the 'user' object changes (e.g., after login or checkUserAuth).
    */
   const isUserAdmin = useMemo(() => {
-    return user?.isAdmin || user?.role === 'admin';
+    return user?.isAdmin || user?.role === 'Admin' || user?.role === 'Manager';
   }, [user]);
 
   /**
    * Validates the session with the backend on mount.
    */
-  const checkUserAuth = async () => {
-    setLoading(true); // Ensure loading is true while checking
+  const checkUserAuth = useCallback(async () => {
+    setLoading(true);
     try {
-      const response = await fetcher('/api/users/me');
+      const response = await fetcher('/api/users/profile');
 
-      // Based on your controller structure: response.data.user
-      if (response.success && response.data?.user) {
-        setUser(response.data.user);
+      // Update depending on your exact backend payload structure
+      if (response.success && response.data) {
+        // If data is the user object itself
+        setUser(response.data.user || response.data);
       } else {
         setUser(null);
       }
@@ -36,27 +37,28 @@ export const AuthProvider = ({ children }) => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [fetcher]);
 
   /**
    * Triggers the backend logout and resets local user state.
    */
   const logout = async () => {
     try {
-      const response = await fetcher('/api/auth/logout', { method: 'POST' });
+      // Calls the backend logout function to clear the JWT cookie
+      await fetcher('/api/auth/logout', { method: 'POST' });
 
-      if (response.success) {
-        setUser(null); // This will automatically set isUserAdmin to false
-      }
-    } catch (err) {
-      console.error('Logout failed:', err);
+      // Clear local state
+      setUser(null);
+      localStorage.removeItem('userInfo');
+    } catch (error) {
+      console.error('Logout failed:', error);
     }
   };
 
   // Run the auth check once when the provider mounts
   useEffect(() => {
     checkUserAuth();
-  }, []);
+  }, [checkUserAuth]);
 
   return (
     <AuthContext.Provider
