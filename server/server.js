@@ -1,5 +1,7 @@
 import dotenv from "dotenv";
 import mongoose from "mongoose";
+import http from "http";
+import { Server } from "socket.io";
 import app from "./app.js";
 
 dotenv.config();
@@ -7,31 +9,54 @@ dotenv.config();
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI;
 
-// 1. Fail Fast Safety Check
-// This prevents the server from hanging or giving vague errors if .env is missing
 if (!MONGO_URI) {
-  console.error("❌ FATAL ERROR: MONGO_URI is not defined in .env");
+  console.error("FATAL ERROR: MONGO_URI is not defined in .env");
   process.exit(1);
 }
 
-// 2. Database Connection
+const server = http.createServer(app);
+
+const io = new Server(server, {
+  cors: {
+    origin: [
+      process.env.CLIENT_URL,
+      "http://localhost:5173",
+      "http://127.0.0.1:5173",
+    ].filter(Boolean),
+    methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
+    credentials: true,
+  },
+});
+
+app.set("io", io);
+
+io.on("connection", (socket) => {
+  console.log(`Client connected: ${socket.id}`);
+
+  socket.on("join_user_room", (userId) => {
+    socket.join(userId);
+  });
+
+  socket.on("disconnect", () => {
+    console.log(`Client disconnected: ${socket.id}`);
+  });
+});
+
 mongoose
   .connect(MONGO_URI)
   .then(() => {
-    console.log("✅ MongoDB connected");
-    app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+    console.log("MongoDB connected");
+    server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
   })
   .catch((err) => {
-    console.error("❌ DB connection error:", err);
-    process.exit(1); // Exit if DB fails to connect
+    console.error("DB connection error:", err);
+    process.exit(1);
   });
 
-// 3. Graceful Shutdown
-// Ensures MongoDB connection closes cleanly when you stop the server (Ctrl+C)
 process.on("SIGINT", async () => {
   try {
     await mongoose.connection.close();
-    console.log("🛑 MongoDB connection closed");
+    console.log("MongoDB connection closed");
     process.exit(0);
   } catch (err) {
     console.error("Error during shutdown:", err);
