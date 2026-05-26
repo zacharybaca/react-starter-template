@@ -17,7 +17,7 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: "job_jury_assets",
+    folder: "avatar_uploads",
     allowedFormats: ["jpeg", "png", "jpg", "mp4"],
     resource_type: "auto",
   },
