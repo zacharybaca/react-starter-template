@@ -4,9 +4,10 @@ import { FetcherContext } from './FetcherContext.jsx';
 export const FetcherProvider = ({ children }) => {
   const [isLoaded, setIsLoaded] = useState(false);
 
-  // Pull backend URL from environment variables
-  const backendUrl =
-    import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
+  // Dynamic backend URL routing based on environment
+  const backendUrl = import.meta.env.PROD
+    ? import.meta.env.VITE_BACKEND_URL || '' // Production: Use env var, or fallback to relative path
+    : import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000'; // Local: Use env var, or fallback to localhost
 
   const fetcher = async (
     url,
@@ -34,7 +35,7 @@ export const FetcherProvider = ({ children }) => {
     try {
       let response = await fetch(finalUrl, config);
 
-      // 🛑 1. Handle Rate Limiting (429)
+      // 1. Handle Rate Limiting (429)
       if (response.status === 429) {
         const data = await response.json().catch(() => null);
         return {
@@ -44,9 +45,7 @@ export const FetcherProvider = ({ children }) => {
         };
       }
 
-      // 🛑 2. Handle Unauthorized (401)
-      // Note: We return the status so AuthProvider can decide if this is a "hard" error
-      // or just a guest user session.
+      // 2. Handle Unauthorized (401)
       if (response.status === 401) {
         return {
           success: false,
@@ -65,7 +64,7 @@ export const FetcherProvider = ({ children }) => {
           success: false,
           error: errorMessage,
           status: response.status,
-          data: data, // Keep data in case we need to see why it failed
+          data: data,
         };
       }
 
@@ -79,7 +78,6 @@ export const FetcherProvider = ({ children }) => {
         status: null,
       };
     } finally {
-      // Move this to finally to ensure isLoaded is always true after a call finishes
       setIsLoaded(true);
     }
   };
