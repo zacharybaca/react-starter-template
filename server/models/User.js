@@ -5,15 +5,55 @@ import crypto from "crypto";
 
 const userSchema = mongoose.Schema(
   {
-    name: { type: String, required: true },
-    username: { type: String, required: true, unique: true },
+    companyId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Company",
+      required: true,
+    },
+    department: {
+      type: String,
+      required: true,
+      trim: true,
+      enum: [
+        "Customer Service",
+        "Tech Support",
+        "Human Resources",
+        "Sales",
+        "Marketing",
+        "Engineering",
+        "Product",
+        "Finance",
+        "Legal",
+        "Operations",
+        "Other",
+      ],
+    },
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    role: {
+      type: String,
+      enum: ["Employee", "Manager", "Admin"],
+      default: "Employee",
+    },
+    managerId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      default: null,
+    },
     avatar: { type: String },
-    // UPDATE 1: Renamed to match the controller
     avatarPublicId: { type: String, default: "" },
-    savedCompanies: [{ type: mongoose.Schema.Types.ObjectId, ref: "Company" }],
+    favoriteArticles: [
+      { type: mongoose.Schema.Types.ObjectId, ref: "Article" },
+    ],
     isAdmin: { type: Boolean, default: false },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    verificationToken: String,
+    verificationExpire: Date,
     resetPasswordToken: String,
     resetPasswordExpire: Date,
   },
@@ -23,11 +63,25 @@ const userSchema = mongoose.Schema(
 // Encrypt password before saving
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
-    next();
+    return next();
   }
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
+  next();
 });
+
+userSchema.methods.getVerificationToken = function () {
+  const token = crypto.randomBytes(20).toString("hex");
+
+  this.verificationToken = crypto
+    .createHash("sha256")
+    .update(token)
+    .digest("hex");
+
+  this.verificationExpire = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
+
+  return token;
+};
 
 // Method to compare passwords
 userSchema.methods.matchPassword = async function (enteredPassword) {
@@ -69,24 +123,6 @@ userSchema.pre(
         await cloudinary.uploader.destroy(this.avatarPublicId);
         console.log(`✅ Cloudinary avatar removed: ${this.avatarPublicId}`);
       }
-
-      // 2. Cascade Delete Reviews
-      // Make sure '{ author: userId }' matches the field name in your Review model!
-      const Review = mongoose.model("Review");
-      const deletedReviews = await Review.deleteMany({ author: userId });
-      console.log(
-        `✅ Cascade delete: Removed ${deletedReviews.deletedCount} reviews for user ${this.username}`,
-      );
-
-      // 3. NEW: Cleanup Pending Company Submissions
-      const Company = mongoose.model("Company");
-      const deletedCompanies = await Company.deleteMany({
-        createdBy: userId,
-        isApproved: false, // Only delete if it hasn't been approved yet
-      });
-      console.log(
-        `✅ Cascade delete: Removed ${deletedCompanies.deletedCount} pending companies for user ${this.username}`,
-      );
 
       next();
     } catch (error) {
