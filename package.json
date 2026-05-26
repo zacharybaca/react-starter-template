@@ -30,5 +30,9 @@
   "bugs": {
     "url": "https://github.com/zacharybaca/react-starter-template/issues"
   },
-  "homepage": "https://github.com/zacharybaca/react-starter-template#readme"
+  "homepage": "https://github.com/zacharybaca/react-starter-template#readme",
+  "dependencies": {
+    "prettier": "^3.8.3",
+    "rimraf": "^6.1.3"
+  }
 }
