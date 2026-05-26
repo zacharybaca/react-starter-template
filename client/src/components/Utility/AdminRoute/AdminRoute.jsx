@@ -1,27 +1,26 @@
 import React from 'react';
-import { Navigate, useLocation, Outlet } from 'react-router-dom';
-import { useAuth } from '../../../hooks/useAuth.js';
+import { Navigate, Outlet } from 'react-router-dom';
+import { useAuth } from '../../../hooks/useAuth';
 
 const AdminRoute = () => {
-  const { user, isUserAdmin, loading } = useAuth();
-  const location = useLocation();
+  const { user, loading } = useAuth();
 
+  // 1. Wait for the fetcher to complete
   if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        Verifying Admin Credentials...
-      </div>
-    );
+    return <div className="spinner"></div>; // Or a dedicated loading component
   }
 
-  // Check both: logged in AND isUserAdmin
-  if (!user || !isUserAdmin) {
-    // Redirect unauthorized users to home, but save their location
-    return <Navigate to="/" state={{ from: location }} replace />;
+  // 2. Evaluate authentication
+  if (!user) {
+    return <Navigate to="/login" replace />;
   }
 
-  // If they pass the test, render the child routes (Outlet)
-  return <Outlet />;
+  // 3. Evaluate authorization
+  if (user.role === 'Manager' || user.role === 'Admin') {
+    return <Outlet />;
+  }
+
+  return <Navigate to="/employee-dashboard" replace />;
 };
 
 export default AdminRoute;
