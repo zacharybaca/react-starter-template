@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { useAuth } from '../../../hooks/useAuth.js';
 import './nav-bar.css';
 
@@ -7,14 +8,11 @@ const NavBar = () => {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
 
-  // State and Ref for the dropdown menu
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  // Click-outside listener
   useEffect(() => {
     const handleClickOutside = (event) => {
-      // If the dropdown is open AND the click happened outside our ref, close it
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setIsDropdownOpen(false);
       }
@@ -28,13 +26,12 @@ const NavBar = () => {
 
   const handleLogout = async (e) => {
     e.preventDefault();
-    localStorage.removeItem('user-wallpaper');
     await logout();
-    setIsDropdownOpen(false); // Close menu on logout
-    navigate('/login', { state: { message: 'Successfully logged out.' } });
+    setIsDropdownOpen(false);
+    toast.success('Successfully logged out.');
+    navigate('/login');
   };
 
-  // Helper to close menu when a link is clicked
   const closeMenu = () => setIsDropdownOpen(false);
 
   return (
@@ -47,7 +44,7 @@ const NavBar = () => {
         <ul className="nav-links">
           <li>
             <Link to="/" className="nav-item">
-              Browse Companies
+              Home
             </Link>
           </li>
 
@@ -67,13 +64,11 @@ const NavBar = () => {
           )}
 
           {user && (
-            // The Dropdown Container
             <li className="user-menu-container" ref={dropdownRef}>
               <button
                 className="dropdown-toggle"
                 onClick={() => setIsDropdownOpen(!isDropdownOpen)}
               >
-                {/* NEW: Dynamic Avatar Rendering */}
                 {user.avatar ? (
                   <img
                     src={user.avatar}
@@ -96,7 +91,6 @@ const NavBar = () => {
                 </span>
               </button>
 
-              {/* The Dropdown Menu */}
               {isDropdownOpen && (
                 <div className="dropdown-menu">
                   <div className="dropdown-header">
@@ -106,18 +100,11 @@ const NavBar = () => {
                   <div className="dropdown-divider"></div>
 
                   <Link
-                    to="/register-company"
+                    to="/profile"
                     className="dropdown-item"
                     onClick={closeMenu}
                   >
-                    Register Company
-                  </Link>
-                  <Link
-                    to="/my-submissions"
-                    className="dropdown-item"
-                    onClick={closeMenu}
-                  >
-                    My Submissions
+                    My Profile
                   </Link>
 
                   <Link
@@ -125,10 +112,9 @@ const NavBar = () => {
                     className="dropdown-item"
                     onClick={closeMenu}
                   >
-                    Profile Settings
+                    Settings
                   </Link>
 
-                  {/* Optional: Only show Admin Dashboard link if user is an admin */}
                   {user.isAdmin && (
                     <Link
                       to="/admin/dashboard"
