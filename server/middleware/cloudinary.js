@@ -3,10 +3,7 @@ import { CloudinaryStorage } from "multer-storage-cloudinary";
 import multer from "multer";
 import dotenv from "dotenv";
 
-// Manually call config HERE to be 100% safe
 dotenv.config();
-
-console.log("Debug: API Key present?", !!process.env.CLOUDINARY_KEY);
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,

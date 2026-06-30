@@ -28,9 +28,9 @@ const protect = asyncHandler(async (req, res, next) => {
   throw new Error("Not authorized, no token");
 });
 
-// For strictly Admin-only routes (e.g., Company management)
+// For strictly Admin-only routes
 const admin = (req, res, next) => {
-  if (req.user && (req.user.isAdmin || req.user.role === "Admin")) {
+  if (req.user && (req.user.isAdmin || req.user.role === "admin")) {
     next();
   } else {
     res.status(403);
@@ -38,14 +38,4 @@ const admin = (req, res, next) => {
   }
 };
 
-// NEW: For Manager-only or Admin access (e.g., Article Approvals)
-const manager = (req, res, next) => {
-  if (req.user && (req.user.role === "Manager" || req.user.role === "Admin")) {
-    next();
-  } else {
-    res.status(403);
-    throw new Error("Access denied. Manager role required.");
-  }
-};
-
-export { protect, admin, manager };
+export { protect, admin };

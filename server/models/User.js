@@ -1,57 +1,22 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
-import { v2 as cloudinary } from "cloudinary";
 import crypto from "crypto";
 
-const userSchema = mongoose.Schema(
+const userSchema = new mongoose.Schema(
   {
-    companyId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Company",
-      required: true,
-    },
-    department: {
-      type: String,
-      required: true,
-      trim: true,
-      enum: [
-        "Customer Service",
-        "Tech Support",
-        "Human Resources",
-        "Sales",
-        "Marketing",
-        "Engineering",
-        "Product",
-        "Finance",
-        "Legal",
-        "Operations",
-        "Other",
-      ],
-    },
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
-    email: { type: String, required: true, unique: true },
+    name: { type: String, required: true, trim: true },
+    username: { type: String, required: true, unique: true, trim: true },
+    email: { type: String, required: true, unique: true, trim: true, lowercase: true },
     password: { type: String, required: true },
     role: {
       type: String,
-      enum: ["Employee", "Manager", "Admin"],
-      default: "Employee",
-    },
-    managerId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      default: null,
+      enum: ["user", "admin"],
+      default: "user",
     },
     avatar: { type: String },
     avatarPublicId: { type: String, default: "" },
-    favoriteArticles: [
-      { type: mongoose.Schema.Types.ObjectId, ref: "Article" },
-    ],
     isAdmin: { type: Boolean, default: false },
-    isVerified: {
-      type: Boolean,
-      default: false,
-    },
+    isVerified: { type: Boolean, default: false },
     verificationToken: String,
     verificationExpire: Date,
     resetPasswordToken: String,
@@ -70,6 +35,27 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
+// Compare entered password against stored hash
+userSchema.methods.matchPassword = async function (enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password);
+};
+
+// Generate a short-lived password reset token
+userSchema.methods.getResetPasswordToken = function () {
+  const resetToken = crypto.randomBytes(20).toString("hex");
+
+  this.resetPasswordToken = crypto
+    .createHash("sha256")
+    .update(resetToken)
+    .digest("hex");
+
+  // Expires in 10 minutes
+  this.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
+
+  return resetToken;
+};
+
+// Generate a 24-hour email verification token
 userSchema.methods.getVerificationToken = function () {
   const token = crypto.randomBytes(20).toString("hex");
 
@@ -78,60 +64,10 @@ userSchema.methods.getVerificationToken = function () {
     .update(token)
     .digest("hex");
 
-  this.verificationExpire = Date.now() + 24 * 60 * 60 * 1000; // 24 hours
+  this.verificationExpire = Date.now() + 24 * 60 * 60 * 1000;
 
   return token;
 };
-
-// Method to compare passwords
-userSchema.methods.matchPassword = async function (enteredPassword) {
-  return await bcrypt.compare(enteredPassword, this.password);
-};
-
-userSchema.methods.getResetPasswordToken = function () {
-  // 1. Generate a raw 20-character hex token
-  const resetToken = crypto.randomBytes(20).toString("hex");
-
-  // 2. Hash the token and set it to the database field
-  // We hash it in the DB so if your database is ever compromised, hackers can't use the tokens
-  this.resetPasswordToken = crypto
-    .createHash("sha256")
-    .update(resetToken)
-    .digest("hex");
-
-  // 3. Set expiration to 10 minutes from right now
-  this.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
-
-  // 4. Return the RAW token (this is what we email to the user)
-  return resetToken;
-};
-
-/**
- * PRE-DELETE MIDDLEWARE
- * Triggers on user.deleteOne()
- * Handles Cloudinary asset removal, Review cascade deletion, and Pending Company cleanup.
- */
-userSchema.pre(
-  "deleteOne",
-  { document: true, query: false },
-  async function (next) {
-    try {
-      const userId = this._id;
-
-      // 1. Cleanup Cloudinary Image
-      if (this.avatarPublicId) {
-        await cloudinary.uploader.destroy(this.avatarPublicId);
-        console.log(`✅ Cloudinary avatar removed: ${this.avatarPublicId}`);
-      }
-
-      next();
-    } catch (error) {
-      console.error("❌ Middleware Cleanup Error:", error);
-      // We call next() anyway so the primary user record is still deleted
-      next();
-    }
-  },
-);
 
 const User = mongoose.model("User", userSchema);
 
