@@ -10,6 +10,8 @@ jobs:
   client:
     name: Client — Lint, Build & Test
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     defaults:
       run:
         working-directory: client
@@ -37,6 +39,8 @@ jobs:
   server:
     name: Server — Test
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     defaults:
       run:
         working-directory: server
