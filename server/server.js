@@ -6,13 +6,18 @@ import app from "./app.js";
 
 dotenv.config();
 
-const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGO_URI;
-
-if (!MONGO_URI) {
-  console.error("FATAL ERROR: MONGO_URI is not defined in .env");
+// Validate required environment variables before doing anything else
+const REQUIRED_ENV_VARS = ["MONGO_URI", "JWT_SECRET"];
+const missingVars = REQUIRED_ENV_VARS.filter((key) => !process.env[key]);
+if (missingVars.length > 0) {
+  console.error(
+    `FATAL: Missing required environment variables: ${missingVars.join(", ")}`,
+  );
   process.exit(1);
 }
+
+const PORT = process.env.PORT || 5000;
+const MONGO_URI = process.env.MONGO_URI;
 
 const server = http.createServer(app);
 
