@@ -4,6 +4,11 @@ import Footer from './components/Layout/Footer/Footer';
 import Login from './components/Auth/Login/Login';
 import Register from './components/Auth/Register/Register';
 import Home from './components/Pages/Home';
+import Dashboard from './components/Dashboard/Dashboard';
+import IncidentList from './components/Incidents/IncidentList';
+import IncidentDetail from './components/Incidents/IncidentDetail';
+import IncidentForm from './components/Incidents/IncidentForm';
+import ApplicationList from './components/Applications/ApplicationList';
 import "./App.css";
 
 
@@ -29,6 +34,12 @@ function App() {
           <Route index element={<Home />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="incidents" element={<IncidentList />} />
+          <Route path="incidents/new" element={<IncidentForm />} />
+          <Route path="incidents/:id" element={<IncidentDetail />} />
+          <Route path="incidents/:id/edit" element={<IncidentForm />} />
+          <Route path="applications" element={<ApplicationList />} />
 
           {/* Catch-all for 404s */}
           <Route path="*" element={<div className="page-content"><h2>404: Page Not Found</h2></div>} />

@@ -48,6 +48,26 @@ const NavBar = () => {
             </Link>
           </li>
 
+          {user && (
+            <>
+              <li>
+                <Link to="/dashboard" className="nav-item">
+                  Dashboard
+                </Link>
+              </li>
+              <li>
+                <Link to="/incidents" className="nav-item">
+                  Incidents
+                </Link>
+              </li>
+              <li>
+                <Link to="/applications" className="nav-item">
+                  Applications
+                </Link>
+              </li>
+            </>
+          )}
+
           {!user && (
             <>
               <li>

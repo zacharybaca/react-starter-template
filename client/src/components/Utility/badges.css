@@ -1,0 +1,23 @@
+/* ── Shared badge styles ────────────────────────────────── */
+.badge {
+  display: inline-block;
+  padding: 0.2em 0.6em;
+  border-radius: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+/* Status variants */
+.badge--open        { background: #dbeafe; color: #1d4ed8; }
+.badge--in_progress { background: #fef3c7; color: #b45309; }
+.badge--resolved    { background: #d1fae5; color: #065f46; }
+.badge--closed      { background: #f1f5f9; color: #475569; }
+
+/* Priority variants */
+.badge--priority-low      { background: #e0f2fe; color: #0369a1; }
+.badge--priority-medium   { background: #fef9c3; color: #854d0e; }
+.badge--priority-high     { background: #fee2e2; color: #b91c1c; }
+.badge--priority-critical { background: #7f1d1d; color: #fef2f2; }

@@ -1,0 +1,132 @@
+.app-list-page {
+  padding: 1.5rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.app-list-page__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.app-list-page__header h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.app-search {
+  width: 100%;
+  max-width: 360px;
+  margin-bottom: 1.5rem;
+}
+
+.app-list__state {
+  padding: 2rem;
+  text-align: center;
+  color: #64748b;
+}
+
+.app-list__state--error {
+  color: #dc2626;
+}
+
+.app-list__empty {
+  color: #94a3b8;
+  text-align: center;
+  padding: 2rem;
+}
+
+/* Application cards */
+.app-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 1.25rem;
+}
+
+.app-card {
+  background: #fff;
+  border-radius: 0.75rem;
+  padding: 1.25rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.app-card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.app-card__name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.app-card__status {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  padding: 0.2em 0.55em;
+  border-radius: 0.3rem;
+  white-space: nowrap;
+}
+
+.app-card__desc {
+  font-size: 0.85rem;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+.app-card__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: #64748b;
+}
+
+.app-card__delete {
+  align-self: flex-end;
+  color: #dc2626;
+  font-size: 0.8rem;
+  margin-top: auto;
+}
+
+.app-card__delete:hover {
+  background: #fee2e2;
+}
+
+/* App form */
+.app-form {
+  background: #fff;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  margin-bottom: 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+}
+
+.app-form__title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1e293b;
+}
+
+.app-form__error {
+  background: #fee2e2;
+  color: #b91c1c;
+  padding: 0.65rem 0.9rem;
+  border-radius: 0.4rem;
+  font-size: 0.875rem;
+}
+
+/* re-use .form-group, .form-row, .form-actions, .btn from incidents.css */
