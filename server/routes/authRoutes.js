@@ -49,8 +49,23 @@ const registerValidators = [
 const loginValidators = [
   body("email")
     .optional({ checkFalsy: true })
+    .trim()
     .isEmail()
-    .withMessage("Please enter a valid email address"),
+    .withMessage("Please enter a valid email address")
+    .normalizeEmail(),
+  body("username")
+    .optional({ checkFalsy: true })
+    .trim()
+    .isLength({ min: 3, max: 30 })
+    .withMessage("Username must be 3–30 characters")
+    .matches(/^[a-zA-Z0-9_]+$/)
+    .withMessage("Username may only contain letters, numbers, and underscores"),
+  body().custom((_, { req }) => {
+    if (!req.body.email && !req.body.username) {
+      throw new Error("Email or username is required");
+    }
+    return true;
+  }),
   body("password").notEmpty().withMessage("Password is required"),
 ];
 
