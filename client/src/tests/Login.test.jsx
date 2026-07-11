@@ -4,13 +4,14 @@ import { MemoryRouter } from 'react-router-dom';
 import Login from '../components/Auth/Login/Login';
 
 const mockFetcher = vi.fn();
+let mockUser = null;
 
 vi.mock('../hooks/useFetcher.js', () => ({
   useFetcher: () => ({ fetcher: mockFetcher }),
 }));
 
 vi.mock('../hooks/useAuth.js', () => ({
-  useAuth: () => ({ user: null }),
+  useAuth: () => ({ user: mockUser }),
 }));
 
 const renderLogin = (initialEntries = ['/login']) =>
@@ -23,6 +24,7 @@ const renderLogin = (initialEntries = ['/login']) =>
 describe('Login', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockUser = null;
   });
 
   it('renders the login form', () => {
@@ -63,5 +65,11 @@ describe('Login', () => {
         })
       );
     });
+  });
+
+  it('redirects authenticated users away from the login form', () => {
+    mockUser = { _id: '1', name: 'Test User' };
+    renderLogin();
+    expect(screen.queryByRole('button', { name: /login/i })).not.toBeInTheDocument();
   });
 });

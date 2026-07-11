@@ -44,7 +44,7 @@ const isUserAdmin = asyncHandler(async (req, res) => {
 const loginUser = asyncHandler(async (req, res) => {
   const { email, username, password } = req.body;
   const user = await User.findOne(
-    email ? { email } : { username }
+    email && username ? { $or: [{ email }, { username }] } : email ? { email } : { username }
   );
 
   if (user && (await user.matchPassword(password))) {
