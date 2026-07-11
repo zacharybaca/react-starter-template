@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import PropTypes from 'prop-types';
 import { useFetcher } from '../../hooks/useFetcher.js';
 import { AuthContext } from './AuthContext.jsx';
 
@@ -13,7 +14,7 @@ export const AuthProvider = ({ children }) => {
    * whenever the 'user' object changes (e.g., after login or checkUserAuth).
    */
   const isUserAdmin = useMemo(() => {
-    return user?.isAdmin || user?.role === 'admin';
+    return user?.role === 'admin';
   }, [user]);
 
   /**
@@ -74,4 +75,8 @@ export const AuthProvider = ({ children }) => {
       {children}
     </AuthContext.Provider>
   );
+};
+
+AuthProvider.propTypes = {
+  children: PropTypes.node.isRequired,
 };
