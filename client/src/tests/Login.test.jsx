@@ -9,6 +9,10 @@ vi.mock('../hooks/useFetcher.js', () => ({
   useFetcher: () => ({ fetcher: mockFetcher }),
 }));
 
+vi.mock('../hooks/useAuth.js', () => ({
+  useAuth: () => ({ user: null }),
+}));
+
 const renderLogin = (initialEntries = ['/login']) =>
   render(
     <MemoryRouter initialEntries={initialEntries}>

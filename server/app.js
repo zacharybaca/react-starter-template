@@ -22,6 +22,10 @@ const corsOptions = {
 // Security headers
 app.use(helmet());
 
+// CORS must be applied before rate limiters so that preflight (OPTIONS) responses
+// and rate-limit (429) responses both carry the required Access-Control-* headers.
+app.use(cors(corsOptions));
+
 // Request logging (skip in test environment)
 if (process.env.NODE_ENV !== "test") {
   app.use(morgan(process.env.NODE_ENV === "production" ? "combined" : "dev"));
@@ -48,7 +52,6 @@ const authLimiter = rateLimit({
 app.use("/api/auth", authLimiter);
 
 // Middleware
-app.use(cors(corsOptions));
 app.use(cookieParser()); // Must come before routes to parse JWT cookies
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

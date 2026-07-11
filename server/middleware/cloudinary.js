@@ -15,10 +15,13 @@ const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: "avatar_uploads",
-    allowedFormats: ["jpeg", "png", "jpg", "mp4"],
-    resource_type: "auto",
+    allowedFormats: ["jpeg", "png", "jpg"],
+    resource_type: "image",
   },
 });
 
-export const upload = multer({ storage });
+export const upload = multer({
+  storage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB max
+});
 export { cloudinary };

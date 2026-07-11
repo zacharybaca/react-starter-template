@@ -43,8 +43,9 @@ const isUserAdmin = asyncHandler(async (req, res) => {
 
 const loginUser = asyncHandler(async (req, res) => {
   const { email, username, password } = req.body;
-  const user =
-    (await User.findOne({ email })) || (await User.findOne({ username }));
+  const user = await User.findOne(
+    email ? { email } : { username }
+  );
 
   if (user && (await user.matchPassword(password))) {
     generateToken(res, user._id);
@@ -130,6 +131,11 @@ const resetPassword = asyncHandler(async (req, res) => {
   if (!user) {
     res.status(400);
     throw new Error("Invalid or expired password reset token.");
+  }
+
+  if (!req.body.password || req.body.password.length < 8) {
+    res.status(400);
+    throw new Error("Password must be at least 8 characters.");
   }
 
   user.password = req.body.password;
