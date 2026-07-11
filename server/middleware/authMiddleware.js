@@ -9,16 +9,18 @@ const protect = asyncHandler(async (req, res, next) => {
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
       req.user = await User.findById(decoded.userId).select("-password");
-
-      if (req.user) return next();
-
-      // Token is valid but the user record no longer exists
-      res.status(401);
-      throw new Error("Not authorized, user not found");
     } catch (error) {
       res.status(401);
       throw new Error("Not authorized, token failed");
     }
+
+    // Token is valid but the user record no longer exists
+    if (!req.user) {
+      res.status(401);
+      throw new Error("Not authorized, user not found");
+    }
+
+    return next();
   }
 
   res.status(401);
