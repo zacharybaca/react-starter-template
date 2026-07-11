@@ -46,7 +46,11 @@ const updateUserProfile = asyncHandler(async (req, res) => {
 
   if (req.file) {
     if (user.avatarPublicId) {
-      await cloudinary.uploader.destroy(user.avatarPublicId);
+      try {
+        await cloudinary.uploader.destroy(user.avatarPublicId);
+      } catch (err) {
+        console.error("Failed to delete old avatar from Cloudinary:", err);
+      }
     }
     user.avatar = req.file.path;
     user.avatarPublicId = req.file.filename;
@@ -79,7 +83,11 @@ const deleteUser = asyncHandler(async (req, res) => {
   }
 
   if (user.avatarPublicId) {
-    await cloudinary.uploader.destroy(user.avatarPublicId);
+    try {
+      await cloudinary.uploader.destroy(user.avatarPublicId);
+    } catch (err) {
+      console.error("Failed to delete avatar from Cloudinary:", err);
+    }
   }
 
   await user.deleteOne();

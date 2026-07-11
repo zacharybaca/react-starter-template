@@ -16,6 +16,13 @@ if (missingVars.length > 0) {
   process.exit(1);
 }
 
+// Warn about optional-but-important env vars
+if (!process.env.FRONTEND_URL) {
+  console.warn(
+    "WARN: FRONTEND_URL is not set. Password reset emails will contain broken links.",
+  );
+}
+
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI;
 
@@ -61,6 +68,11 @@ mongoose
 const gracefulShutdown = async (signal) => {
   console.log(`Received ${signal}. Shutting down gracefully...`);
   try {
+    // Stop accepting new connections first, then close DB
+    await new Promise((resolve, reject) =>
+      server.close((err) => (err ? reject(err) : resolve()))
+    );
+    console.log("HTTP server closed");
     await mongoose.connection.close();
     console.log("MongoDB connection closed");
     process.exit(0);

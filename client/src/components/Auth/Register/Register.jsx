@@ -12,6 +12,7 @@ const Register = () => {
     email: '',
     password: '',
   });
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { fetcher } = useFetcher();
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -30,6 +31,10 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmitting) {
+      return;
+    }
+    setIsSubmitting(true);
     const response = await fetcher('/api/auth/register', {
       method: 'POST',
       body: JSON.stringify(formData),
@@ -41,6 +46,7 @@ const Register = () => {
       });
     } else {
       toast.error(response.error || 'Registration failed. Please try again.');
+      setIsSubmitting(false);
     }
   };
 
@@ -93,8 +99,8 @@ const Register = () => {
               required
             />
           </div>
-          <button type="submit" className="auth-submit-btn">
-            Create Account
+          <button type="submit" className="auth-submit-btn" disabled={isSubmitting}>
+            {isSubmitting ? 'Creating Account...' : 'Create Account'}
           </button>
         </form>
         <p className="auth-footer">

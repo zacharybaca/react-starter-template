@@ -7,9 +7,10 @@ import { useAuth } from '../../hooks/useAuth';
 export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
   const { user } = useAuth();
+  const userId = user?._id;
 
   useEffect(() => {
-    if (!user) return;
+    if (!userId) return;
 
     const socketUrl =
       import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
@@ -21,13 +22,13 @@ export const SocketProvider = ({ children }) => {
 
     // Authenticate/Join targeted room
     newSocket.on('connect', () => {
-      newSocket.emit('join_user_room', user._id);
+      newSocket.emit('join_user_room', userId);
     });
 
     setSocket(newSocket);
 
     return () => newSocket.disconnect();
-  }, [user]);
+  }, [userId]);
 
   return (
     <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>
