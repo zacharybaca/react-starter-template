@@ -12,6 +12,9 @@ const ForgotPassword = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmitting) {
+      return;
+    }
     setIsSubmitting(true);
 
     const response = await fetcher('/api/auth/forgotpassword', {
@@ -19,7 +22,7 @@ const ForgotPassword = () => {
       body: JSON.stringify({ email }),
     });
 
-    if (response.success) {
+    if (response.success || response.status === 404) {
       setSubmitted(true);
     } else {
       toast.error(response.error || 'Could not send reset email. Please try again.');

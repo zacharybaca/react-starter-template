@@ -69,7 +69,9 @@ const gracefulShutdown = async (signal) => {
   console.log(`Received ${signal}. Shutting down gracefully...`);
   try {
     // Stop accepting new connections first, then close DB
-    await new Promise((resolve) => server.close(resolve));
+    await new Promise((resolve, reject) =>
+      server.close((err) => (err ? reject(err) : resolve()))
+    );
     console.log("HTTP server closed");
     await mongoose.connection.close();
     console.log("MongoDB connection closed");

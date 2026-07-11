@@ -31,6 +31,9 @@ const Register = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (isSubmitting) {
+      return;
+    }
     setIsSubmitting(true);
     const response = await fetcher('/api/auth/register', {
       method: 'POST',

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import Login from '../components/Auth/Login/Login';
 
@@ -64,6 +64,35 @@ describe('Login', () => {
           body: expect.stringContaining('user@example.com'),
         })
       );
+    });
+  });
+
+  it('disables the submit button and shows loading text while the request is in flight', async () => {
+    let resolveRequest;
+    mockFetcher.mockReturnValue(
+      new Promise((resolve) => {
+        resolveRequest = resolve;
+      })
+    );
+
+    renderLogin();
+
+    fireEvent.change(document.querySelector('input[type="email"]'), {
+      target: { value: 'user@example.com' },
+    });
+    fireEvent.change(document.querySelector('input[type="password"]'), {
+      target: { value: 'password123' },
+    });
+    fireEvent.click(screen.getByRole('button', { name: /login/i }));
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole('button', { name: 'Logging in...' })
+      ).toBeDisabled();
+    });
+
+    await act(async () => {
+      resolveRequest({ success: false, error: 'Invalid credentials' });
     });
   });
 
