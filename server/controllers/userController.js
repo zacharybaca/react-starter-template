@@ -61,7 +61,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     email: updatedUser.email,
     avatar: updatedUser.avatar,
     role: updatedUser.role,
-    isAdmin: updatedUser.isAdmin,
+    isAdmin: updatedUser.role === "admin",
   });
 });
 
