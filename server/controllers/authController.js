@@ -142,7 +142,7 @@ const resetPassword = asyncHandler(async (req, res) => {
 
   res.status(200).json({
     success: true,
-    message: "Password reset successful. You can now log in with your new password.",
+    message: "Password reset successful. You are now logged in.",
   });
 });
 
