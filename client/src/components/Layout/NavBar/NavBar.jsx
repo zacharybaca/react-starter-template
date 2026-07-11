@@ -115,7 +115,7 @@ const NavBar = () => {
                     Settings
                   </Link>
 
-                  {user.isAdmin && (
+                  {user.role === 'admin' && (
                     <Link
                       to="/admin/dashboard"
                       className="dropdown-item"

@@ -19,21 +19,23 @@ Monorepo structure with a single-command startup, pre-configured CORS + Vite pro
 - **Context API:** `AuthContext`, `FetcherContext`, `SocketContext` composable via `AppProvider`.
 - **Custom `useFetcher` hook:** Centralized fetch wrapper with credential handling and error normalization.
 - **react-toastify:** Drop-in toast notifications already wired to auth flows.
+- **PropTypes:** Runtime prop validation on all provider and utility components.
 - **ESLint + Prettier + Husky:** Pre-commit formatting and linting enforced automatically.
-- **Vitest + Testing Library:** Unit and component tests out of the box.
+- **Vitest + Testing Library:** Unit and component tests out of the box, with coverage via `@vitest/coverage-v8`.
 
 ### 🛡 Backend (`server/`)
 - **JWT Auth:** `httpOnly` cookie-based tokens with 30-day expiry.
-- **Role-based access:** `protect` (auth) and `admin` (admin-only) middleware.
-- **Password reset flow:** Secure token generation + Nodemailer SMTP email delivery.
+- **Role-based access:** `protect` (auth) and `admin` (`role === "admin"`) middleware.
+- **Input validation:** `express-validator` enforced on register and login routes.
+- **Password reset flow:** Secure token generation + Nodemailer SMTP email delivery. Auto-logs in after reset.
 - **Socket.IO:** Per-user rooms wired on connection.
 - **Cloudinary:** Optional avatar upload middleware via Multer.
 - **Security:** `helmet`, `cors`, `express-rate-limit`, `bcryptjs` — all pre-configured and active.
 - **Logging:** `morgan` request logger (colorized in dev, Apache Combined in production).
-- **Vitest:** Backend unit tests for middleware and utilities.
+- **Vitest:** Backend unit tests for middleware and utilities, with coverage via `@vitest/coverage-v8`.
 
 ### 🔄 CI/CD
-- **GitHub Actions:** Automatically lints, builds, and tests both `client` and `server` on every push/PR to `main`.
+- **GitHub Actions:** Automatically lints, builds, and tests both `client` and `server` on every push/PR to `main`. Server job includes a syntax-check pass with `node --check`.
 
 ---
 
@@ -55,6 +57,8 @@ npm run install-all
 cp .env.example server/.env
 # Edit server/.env with your MongoDB URI, JWT secret, SMTP credentials, etc.
 ```
+
+> **Frontend env:** Create `client/.env` and set `VITE_BACKEND_URL` to your backend URL (only needed in production or when the backend is not on `localhost:5000`).
 
 ### 3. Start development servers
 
@@ -85,7 +89,7 @@ react-starter-template/
 │       ├── components/
 │       │   ├── Auth/             # Login & Register forms
 │       │   ├── Layout/           # NavBar, Footer, Header
-│       │   ├── Pages/            # Route-level page components
+│       │   ├── Pages/            # Route-level page components (Home, NotFound)
 │       │   └── Utility/          # ProtectedRoute, AdminRoute
 │       ├── contexts/
 │       │   ├── Auth/             # AuthContext + AuthProvider
@@ -123,7 +127,7 @@ react-starter-template/
 | Auth      | JWT (httpOnly cookies), bcryptjs                       |
 | Email     | Nodemailer (SMTP)                                      |
 | Storage   | Cloudinary (optional)                                  |
-| Security  | helmet, express-rate-limit, cors                       |
+| Security  | helmet, express-rate-limit, cors, express-validator    |
 | Testing   | Vitest, @testing-library/react, supertest              |
 | Tooling   | ESLint, Prettier, Husky, Concurrently, Nodemon         |
 
@@ -143,8 +147,11 @@ react-starter-template/
 Run tests individually from each package directory:
 
 ```bash
-cd client && npm test        # Vitest component tests
-cd server && npm test        # Vitest unit tests
+cd client && npm test              # Vitest component tests
+cd client && npm run test:coverage # With V8 coverage report
+
+cd server && npm test              # Vitest unit tests
+cd server && npm run test:coverage # With V8 coverage report
 ```
 
 ---
@@ -181,6 +188,53 @@ All endpoints are prefixed with `/api`.
 
 ---
 
+## 🔑 Role-Based Access
+
+Roles are stored as `role: "user" | "admin"` on the User document. There is no separate `isAdmin` flag.
+
+- **`protect` middleware** — requires a valid JWT cookie. Use on any authenticated route.
+- **`admin` middleware** — requires `role === "admin"`. Stack after `protect`.
+
+```js
+// Example protected admin route
+router.get('/admin/stats', protect, admin, getStats);
+```
+
+---
+
+## 🧩 How to Extend
+
+### Add a new Mongoose model
+
+1. Create `server/models/MyModel.js` with your schema.
+2. Import it in the relevant controller.
+
+### Add a new API route
+
+1. Create `server/controllers/myController.js` with your handlers.
+2. Create `server/routes/myRoutes.js` and define your endpoints.
+3. Mount it in `server/app.js`:
+   ```js
+   import myRoutes from './routes/myRoutes.js';
+   app.use('/api/my-resource', myRoutes);
+   ```
+
+### Add a new page
+
+1. Create `client/src/components/Pages/MyPage.jsx`.
+2. Add a `<Route>` in `client/src/App.jsx`:
+   ```jsx
+   <Route path="my-page" element={<MyPage />} />
+   ```
+3. Wrap with `<ProtectedRoute>` if authentication is required:
+   ```jsx
+   <Route element={<ProtectedRoute />}>
+     <Route path="my-page" element={<MyPage />} />
+   </Route>
+   ```
+
+---
+
 ## 🚢 Deployment
 
 ### Render (recommended)
@@ -195,21 +249,22 @@ All endpoints are prefixed with `/api`.
 
 ### Environment Variables
 
-| Variable              | Required | Description                                |
-|-----------------------|----------|--------------------------------------------|
-| `MONGO_URI`           | ✅       | MongoDB connection string                  |
-| `JWT_SECRET`          | ✅       | Secret key for signing JWT tokens          |
-| `NODE_ENV`            | —        | `development` or `production`              |
-| `PORT`                | —        | Express port (default: `5000`)             |
-| `CLIENT_URL`          | —        | Allowed CORS origin                        |
-| `FRONTEND_URL`        | —        | Base URL for password reset links          |
-| `SMTP_HOST`           | —        | SMTP server host                           |
-| `SMTP_PORT`           | —        | SMTP server port (default: `587`)          |
-| `SMTP_USER`           | —        | SMTP username / email address              |
-| `SMTP_PASS`           | —        | SMTP password                              |
-| `FROM_NAME`           | —        | Sender display name for emails             |
-| `FROM_EMAIL`          | —        | Sender email address                       |
-| `CLOUDINARY_CLOUD_NAME` | —      | Cloudinary cloud name (avatar uploads)     |
-| `CLOUDINARY_KEY`      | —        | Cloudinary API key                         |
-| `CLOUDINARY_SECRET`   | —        | Cloudinary API secret                      |
+| Variable              | Where        | Required | Description                                |
+|-----------------------|--------------|----------|--------------------------------------------|
+| `MONGO_URI`           | `server/.env`| ✅       | MongoDB connection string                  |
+| `JWT_SECRET`          | `server/.env`| ✅       | Secret key for signing JWT tokens          |
+| `NODE_ENV`            | `server/.env`| —        | `development` or `production`              |
+| `PORT`                | `server/.env`| —        | Express port (default: `5000`)             |
+| `CLIENT_URL`          | `server/.env`| —        | Allowed CORS origin                        |
+| `FRONTEND_URL`        | `server/.env`| —        | Base URL for password reset links          |
+| `SMTP_HOST`           | `server/.env`| —        | SMTP server host                           |
+| `SMTP_PORT`           | `server/.env`| —        | SMTP server port (default: `587`)          |
+| `SMTP_USER`           | `server/.env`| —        | SMTP username / email address              |
+| `SMTP_PASS`           | `server/.env`| —        | SMTP password                              |
+| `FROM_NAME`           | `server/.env`| —        | Sender display name for emails             |
+| `FROM_EMAIL`          | `server/.env`| —        | Sender email address                       |
+| `CLOUDINARY_CLOUD_NAME` | `server/.env`| —      | Cloudinary cloud name (avatar uploads)     |
+| `CLOUDINARY_KEY`      | `server/.env`| —        | Cloudinary API key                         |
+| `CLOUDINARY_SECRET`   | `server/.env`| —        | Cloudinary API secret                      |
+| `VITE_BACKEND_URL`    | `client/.env`| —        | Backend URL used by the Vite frontend (production only; omit in local dev) |
 

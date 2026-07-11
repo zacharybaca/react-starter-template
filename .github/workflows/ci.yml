@@ -37,7 +37,7 @@ jobs:
         run: npm test
 
   server:
-    name: Server — Test
+    name: Server — Lint & Test
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -55,6 +55,9 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Lint (syntax check)
+        run: node --check app.js server.js controllers/*.js middleware/*.js models/*.js routes/*.js utils/*.js
 
       - name: Test
         run: npm test

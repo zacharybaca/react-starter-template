@@ -8,6 +8,11 @@ import { v2 as cloudinary } from "cloudinary";
  * @access  Private
  */
 const getUserProfile = asyncHandler(async (req, res) => {
+  if (!req.user) {
+    res.status(401);
+    throw new Error("Not authorized");
+  }
+
   const user = await User.findById(req.user._id).select("-password");
 
   if (user) {
@@ -56,7 +61,7 @@ const updateUserProfile = asyncHandler(async (req, res) => {
     email: updatedUser.email,
     avatar: updatedUser.avatar,
     role: updatedUser.role,
-    isAdmin: updatedUser.isAdmin,
+    isAdmin: updatedUser.role === "admin",
   });
 });
 

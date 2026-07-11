@@ -4,6 +4,7 @@ import Footer from './components/Layout/Footer/Footer';
 import Login from './components/Auth/Login/Login';
 import Register from './components/Auth/Register/Register';
 import Home from './components/Pages/Home';
+import NotFound from './components/Pages/NotFound';
 import "./App.css";
 
 
@@ -31,7 +32,7 @@ function App() {
           <Route path="register" element={<Register />} />
 
           {/* Catch-all for 404s */}
-          <Route path="*" element={<div className="page-content"><h2>404: Page Not Found</h2></div>} />
+          <Route path="*" element={<NotFound />} />
         </Route>
       </Routes>
   );

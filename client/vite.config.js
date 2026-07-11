@@ -28,8 +28,11 @@ export default defineConfig({
     minify: 'esbuild',       // Fast and small builds
     rollupOptions: {
       output: {
-        manualChunks: undefined // Avoid splitting into excessive chunks
-      }
+        manualChunks: {
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
+          'ui': ['react-toastify', 'lucide-react'],
+        },
+      },
     }
   }
 })

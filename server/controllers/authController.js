@@ -7,10 +7,9 @@ import crypto from "crypto";
 const registerUser = asyncHandler(async (req, res) => {
   const { name, username, email, password } = req.body;
 
-  const userExists = await User.findOne({ email });
-  const userNameExists = await User.findOne({ username });
+  const userExists = await User.findOne({ $or: [{ email }, { username }] });
 
-  if (userExists || userNameExists) {
+  if (userExists) {
     res.status(400);
     throw new Error("User already exists");
   }
@@ -35,7 +34,7 @@ const isUserAdmin = asyncHandler(async (req, res) => {
   const user = await User.findById(req.user._id);
 
   if (user) {
-    res.status(200).json({ isAdmin: user.isAdmin });
+    res.status(200).json({ isAdmin: user.role === "admin" });
   } else {
     res.status(404);
     throw new Error("User not found");
@@ -64,6 +63,8 @@ const loginUser = asyncHandler(async (req, res) => {
 const logoutUser = asyncHandler(async (req, res) => {
   res.cookie("jwt", "", {
     httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     expires: new Date(0),
   });
   res.status(200).json({ message: "User logged out" });
@@ -137,9 +138,11 @@ const resetPassword = asyncHandler(async (req, res) => {
 
   await user.save();
 
+  generateToken(res, user._id);
+
   res.status(200).json({
     success: true,
-    message: "Password reset successful. You can now log in with your new password.",
+    message: "Password reset successful. You are now logged in.",
   });
 });
 

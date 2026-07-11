@@ -63,18 +63,8 @@ describe('protect middleware', () => {
 });
 
 describe('admin middleware', () => {
-  it('calls next() when user is an admin via isAdmin flag', () => {
-    const req = { user: { isAdmin: true, role: 'user' } };
-    const res = { status: vi.fn().mockReturnThis() };
-    const next = vi.fn();
-
-    admin(req, res, next);
-
-    expect(next).toHaveBeenCalledWith();
-  });
-
   it('calls next() when user has admin role', () => {
-    const req = { user: { isAdmin: false, role: 'admin' } };
+    const req = { user: { role: 'admin' } };
     const res = { status: vi.fn().mockReturnThis() };
     const next = vi.fn();
 
@@ -84,7 +74,7 @@ describe('admin middleware', () => {
   });
 
   it('throws when user is not an admin', () => {
-    const req = { user: { isAdmin: false, role: 'user' } };
+    const req = { user: { role: 'user' } };
     const res = { status: vi.fn().mockReturnThis() };
     const next = vi.fn();
 
