@@ -11,8 +11,11 @@ export const SocketProvider = ({ children }) => {
   useEffect(() => {
     if (!user) return;
 
+    const socketUrl =
+      import.meta.env.VITE_BACKEND_URL || 'http://localhost:5000';
+
     // Initialize connection
-    const newSocket = io(import.meta.env.VITE_BACKEND_URL, {
+    const newSocket = io(socketUrl, {
       withCredentials: true,
     });
 

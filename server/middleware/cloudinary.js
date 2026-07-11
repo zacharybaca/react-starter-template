@@ -15,10 +15,24 @@ const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: "avatar_uploads",
-    allowedFormats: ["jpeg", "png", "jpg", "mp4"],
-    resource_type: "auto",
+    allowedFormats: ["jpeg", "png", "jpg"],
+    resource_type: "image",
   },
 });
 
-export const upload = multer({ storage });
+export const upload = multer({
+  storage,
+  limits: { fileSize: 5 * 1024 * 1024 }, // 5 MB max
+});
+
+export const handleUpload = (fieldName) => (req, res, next) => {
+  upload.single(fieldName)(req, res, (err) => {
+    if (err instanceof multer.MulterError && err.code === "LIMIT_FILE_SIZE") {
+      res.status(413);
+      return next(new Error("File too large. Maximum size is 5 MB."));
+    }
+    next(err);
+  });
+};
+
 export { cloudinary };

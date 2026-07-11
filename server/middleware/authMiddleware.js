@@ -8,19 +8,18 @@ const protect = asyncHandler(async (req, res, next) => {
   if (token) {
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      // Ensure the payload key matches your generateToken utility (usually userId)
       req.user = await User.findById(decoded.userId).select("-password");
-
-      if (req.user) return next();
     } catch (error) {
-      if (req.originalUrl !== "/api/users/me") {
-        res.status(401);
-        throw new Error("Not authorized, token failed");
-      }
+      res.status(401);
+      throw new Error("Not authorized, token failed");
     }
-  }
 
-  if (req.originalUrl === "/api/users/me") {
+    // Token is valid but the user record no longer exists
+    if (!req.user) {
+      res.status(401);
+      throw new Error("Not authorized, user not found");
+    }
+
     return next();
   }
 

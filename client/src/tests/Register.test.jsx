@@ -4,9 +4,14 @@ import { MemoryRouter } from 'react-router-dom';
 import Register from '../components/Auth/Register/Register';
 
 const mockFetcher = vi.fn();
+let mockUser = null;
 
 vi.mock('../hooks/useFetcher.js', () => ({
   useFetcher: () => ({ fetcher: mockFetcher }),
+}));
+
+vi.mock('../hooks/useAuth.js', () => ({
+  useAuth: () => ({ user: mockUser }),
 }));
 
 const renderRegister = () =>
@@ -19,6 +24,7 @@ const renderRegister = () =>
 describe('Register', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockUser = null;
   });
 
   it('renders the registration form', () => {
@@ -36,5 +42,11 @@ describe('Register', () => {
   it('renders a link to the login page', () => {
     renderRegister();
     expect(screen.getByText(/login/i)).toBeInTheDocument();
+  });
+
+  it('redirects authenticated users away from the registration form', () => {
+    mockUser = { _id: '1', name: 'Test User' };
+    renderRegister();
+    expect(screen.queryByRole('button', { name: /create account/i })).not.toBeInTheDocument();
   });
 });

@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { useNavigate, useLocation, Link, Navigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useFetcher } from '../../../hooks/useFetcher.js';
+import { useAuth } from '../../../hooks/useAuth.js';
 import '../auth-forms.css';
 
 const Login = () => {
@@ -9,6 +10,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
 
   const { fetcher } = useFetcher();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -18,6 +20,10 @@ const Login = () => {
       window.history.replaceState({}, document.title);
     }
   }, [location]);
+
+  if (user) {
+    return <Navigate to="/" replace />;
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();

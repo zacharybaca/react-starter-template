@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate, useLocation, Navigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useFetcher } from '../../../hooks/useFetcher.js';
+import { useAuth } from '../../../hooks/useAuth.js';
 import '../auth-forms.css';
 
 const Register = () => {
@@ -12,6 +13,7 @@ const Register = () => {
     password: '',
   });
   const { fetcher } = useFetcher();
+  const { user } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -21,6 +23,10 @@ const Register = () => {
       window.history.replaceState({}, document.title);
     }
   }, [location]);
+
+  if (user) {
+    return <Navigate to="/" replace />;
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();

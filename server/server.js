@@ -58,7 +58,8 @@ mongoose
     process.exit(1);
   });
 
-process.on("SIGINT", async () => {
+const gracefulShutdown = async (signal) => {
+  console.log(`Received ${signal}. Shutting down gracefully...`);
   try {
     await mongoose.connection.close();
     console.log("MongoDB connection closed");
@@ -67,4 +68,7 @@ process.on("SIGINT", async () => {
     console.error("Error during shutdown:", err);
     process.exit(1);
   }
-});
+};
+
+process.on("SIGINT", () => gracefulShutdown("SIGINT"));
+process.on("SIGTERM", () => gracefulShutdown("SIGTERM"));
