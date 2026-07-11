@@ -8,7 +8,7 @@ import '../auth-forms.css';
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const { fetcher } = useFetcher();
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -27,6 +27,7 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsSubmitting(true);
 
     const response = await fetcher('/api/auth/login', {
       method: 'POST',
@@ -38,6 +39,7 @@ const Login = () => {
       navigate(origin);
     } else {
       toast.error(response.error || 'Login failed. Check your credentials.');
+      setIsSubmitting(false);
     }
   };
 
@@ -84,8 +86,8 @@ const Login = () => {
             />
           </div>
 
-          <button type="submit" className="auth-submit-btn">
-            Login
+          <button type="submit" className="auth-submit-btn" disabled={isSubmitting}>
+            {isSubmitting ? 'Logging in...' : 'Login'}
           </button>
         </form>
       </div>
