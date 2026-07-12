@@ -43,6 +43,7 @@ const isUserAdmin = asyncHandler(async (req, res) => {
 
 const loginUser = asyncHandler(async (req, res) => {
   const { email, username, password } = req.body;
+  // Support login by either email or username, and accept both when provided.
   const user = await User.findOne(
     email && username ? { $or: [{ email }, { username }] } : email ? { email } : { username }
   );
@@ -118,6 +119,7 @@ const forgotPassword = asyncHandler(async (req, res) => {
 // @route   PUT /api/auth/resetpassword/:resettoken
 // @access  Public
 const resetPassword = asyncHandler(async (req, res) => {
+  // The token stored in DB is hashed, so hash the incoming raw token before lookup.
   const resetPasswordToken = crypto
     .createHash("sha256")
     .update(req.params.resettoken)

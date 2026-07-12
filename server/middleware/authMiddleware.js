@@ -3,11 +3,13 @@ import asyncHandler from "express-async-handler";
 import User from "../models/User.js";
 
 const protect = asyncHandler(async (req, res, next) => {
+  // JWT is issued as an httpOnly cookie during login.
   let token = req.cookies.jwt;
 
   if (token) {
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      // Never expose password hash downstream.
       req.user = await User.findById(decoded.userId).select("-password");
     } catch (error) {
       res.status(401);
