@@ -10,6 +10,7 @@ export const SocketProvider = ({ children }) => {
   const userId = user?._id;
 
   useEffect(() => {
+    // Only connect sockets for authenticated users.
     if (!userId) return;
 
     const socketUrl =
@@ -27,6 +28,7 @@ export const SocketProvider = ({ children }) => {
 
     setSocket(newSocket);
 
+    // Ensure listeners and socket connection are released on auth changes/unmount.
     return () => newSocket.disconnect();
   }, [userId]);
 
