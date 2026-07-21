@@ -271,7 +271,7 @@ router.get('/admin/stats', protect, admin, getStats);
 | `CLOUDINARY_CLOUD_NAME` | `server/.env`| —      | Cloudinary cloud name (avatar uploads)     |
 | `CLOUDINARY_KEY`      | `server/.env`| —        | Cloudinary API key                         |
 | `CLOUDINARY_SECRET`   | `server/.env`| —        | Cloudinary API secret                      |
-| `CLERK_SECRET_KEY`    | `server/.env`| —        | Clerk secret key (server-side Clerk auth)  |
+| `CLERK_SECRET_KEY`    | `server/.env`| —        | Clerk secret key (required if you enable Clerk server-side verification) |
 | `VITE_BACKEND_URL`    | `client/.env`| —        | Backend URL used by the Vite frontend (production only; omit in local dev) |
-| `VITE_CLERK_PUBLISHABLE_KEY` | `client/.env`| — | Clerk publishable key (from Clerk dashboard) |
+| `VITE_CLERK_PUBLISHABLE_KEY` | `client/.env`| — | Clerk publishable key (required if you enable Clerk in the frontend; from Clerk dashboard) |
 
