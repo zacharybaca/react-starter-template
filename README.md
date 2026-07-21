@@ -16,6 +16,7 @@ Monorepo structure with a single-command startup, pre-configured CORS + Vite pro
 ### ⚡ Frontend (`client/`)
 - **React 19 + Vite 6:** Lightning-fast HMR and optimized production builds.
 - **React Router v7:** Nested routing with a shared Layout component.
+- **Clerk (`@clerk/react-router`):** Drop-in authentication UI and session management. `ClerkProvider` wraps the entire app; use Clerk’s `useUser`/`useClerk`, `<SignIn />`, `<SignUp />`, and `<SignedIn>`/`<SignedOut>` guards anywhere in the component tree.
 - **Context API:** `AuthContext`, `FetcherContext`, `SocketContext` composable via `AppProvider`.
 - **Custom `useFetcher` hook:** Centralized fetch wrapper with credential handling and error normalization.
 - **react-toastify:** Drop-in toast notifications already wired to auth flows.
@@ -58,7 +59,11 @@ cp .env.example server/.env
 # Edit server/.env with your MongoDB URI, JWT secret, SMTP credentials, etc.
 ```
 
-> **Frontend env:** Create `client/.env` and set `VITE_BACKEND_URL` to your backend URL (only needed in production or when the backend is not on `localhost:5000`).
+> **Frontend env:** Create `client/.env` and set (as needed):
+> - `VITE_BACKEND_URL` — your backend URL (only needed in production; omit in local dev)
+> - `VITE_CLERK_PUBLISHABLE_KEY` — Clerk publishable key (only needed if enabling Clerk auth UI; from the [Clerk dashboard](https://dashboard.clerk.com))
+
+> **Clerk setup (optional):** Sign up at [clerk.com](https://clerk.com), create an application, and copy the publishable key into `client/.env` and the secret key into `server/.env`.
 
 ### 3. Start development servers
 
@@ -122,9 +127,9 @@ react-starter-template/
 | Domain    | Technology                                             |
 |-----------|--------------------------------------------------------|
 | Frontend  | React 19, Vite 6, React Router v7, react-toastify      |
+| Auth      | Clerk (`@clerk/react-router`), JWT (httpOnly cookies), bcryptjs |
 | Backend   | Node.js, Express 4, Mongoose 8, Socket.IO 4            |
 | Database  | MongoDB                                                |
-| Auth      | JWT (httpOnly cookies), bcryptjs                       |
 | Email     | Nodemailer (SMTP)                                      |
 | Storage   | Cloudinary (optional)                                  |
 | Security  | helmet, express-rate-limit, cors, express-validator    |
@@ -266,5 +271,7 @@ router.get('/admin/stats', protect, admin, getStats);
 | `CLOUDINARY_CLOUD_NAME` | `server/.env`| —      | Cloudinary cloud name (avatar uploads)     |
 | `CLOUDINARY_KEY`      | `server/.env`| —        | Cloudinary API key                         |
 | `CLOUDINARY_SECRET`   | `server/.env`| —        | Cloudinary API secret                      |
+| `CLERK_SECRET_KEY`    | `server/.env`| —        | Clerk secret key (required if you enable Clerk server-side verification) |
 | `VITE_BACKEND_URL`    | `client/.env`| —        | Backend URL used by the Vite frontend (production only; omit in local dev) |
+| `VITE_CLERK_PUBLISHABLE_KEY` | `client/.env`| — | Clerk publishable key (required if you enable Clerk in the frontend; from Clerk dashboard) |
 
