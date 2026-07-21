@@ -59,11 +59,11 @@ cp .env.example server/.env
 # Edit server/.env with your MongoDB URI, JWT secret, SMTP credentials, etc.
 ```
 
-> **Frontend env:** Create `client/.env` and set:
+> **Frontend env:** Create `client/.env` and set (as needed):
 > - `VITE_BACKEND_URL` — your backend URL (only needed in production; omit in local dev)
-> - `VITE_CLERK_PUBLISHABLE_KEY` — your Clerk publishable key (from the [Clerk dashboard](https://dashboard.clerk.com))
+> - `VITE_CLERK_PUBLISHABLE_KEY` — Clerk publishable key (only needed if enabling Clerk auth UI; from the [Clerk dashboard](https://dashboard.clerk.com))
 
-> **Clerk setup:** Sign up at [clerk.com](https://clerk.com), create an application, and copy the publishable key into `client/.env` and the secret key into `server/.env`.
+> **Clerk setup (optional):** Sign up at [clerk.com](https://clerk.com), create an application, and copy the publishable key into `client/.env` and the secret key into `server/.env`.
 
 ### 3. Start development servers
 
