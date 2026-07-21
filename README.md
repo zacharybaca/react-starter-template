@@ -16,7 +16,7 @@ Monorepo structure with a single-command startup, pre-configured CORS + Vite pro
 ### ⚡ Frontend (`client/`)
 - **React 19 + Vite 6:** Lightning-fast HMR and optimized production builds.
 - **React Router v7:** Nested routing with a shared Layout component.
-- **Clerk (`@clerk/react-router`):** Drop-in authentication UI and session management. `ClerkProvider` wraps the entire app; use `useUser`, `useAuth`, `<SignIn />`, `<SignUp />`, and `<SignedIn>`/`<SignedOut>` guards anywhere in the component tree.
+- **Clerk (`@clerk/react-router`):** Drop-in authentication UI and session management. `ClerkProvider` wraps the entire app; use Clerk’s `useUser`/`useClerk`, `<SignIn />`, `<SignUp />`, and `<SignedIn>`/`<SignedOut>` guards anywhere in the component tree.
 - **Context API:** `AuthContext`, `FetcherContext`, `SocketContext` composable via `AppProvider`.
 - **Custom `useFetcher` hook:** Centralized fetch wrapper with credential handling and error normalization.
 - **react-toastify:** Drop-in toast notifications already wired to auth flows.
