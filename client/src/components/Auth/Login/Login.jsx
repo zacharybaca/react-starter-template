@@ -89,7 +89,11 @@ const Login = () => {
             />
           </div>
 
-          <button type="submit" className="auth-submit-btn" disabled={isSubmitting}>
+          <button
+            type="submit"
+            className="auth-submit-btn"
+            disabled={isSubmitting}
+          >
             {isSubmitting ? 'Logging in...' : 'Login'}
           </button>
         </form>

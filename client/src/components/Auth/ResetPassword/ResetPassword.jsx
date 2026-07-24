@@ -34,7 +34,9 @@ const ResetPassword = () => {
       toast.success('Password reset successful! You are now logged in.');
       navigate('/');
     } else {
-      toast.error(response.error || 'Password reset failed. The link may have expired.');
+      toast.error(
+        response.error || 'Password reset failed. The link may have expired.'
+      );
       setIsSubmitting(false);
     }
   };
@@ -64,7 +66,11 @@ const ResetPassword = () => {
               required
             />
           </div>
-          <button type="submit" className="auth-submit-btn" disabled={isSubmitting}>
+          <button
+            type="submit"
+            className="auth-submit-btn"
+            disabled={isSubmitting}
+          >
             {isSubmitting ? 'Resetting...' : 'Reset Password'}
           </button>
         </form>

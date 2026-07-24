@@ -1,5 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  act,
+} from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import Login from '../components/Auth/Login/Login';
 
@@ -36,7 +42,9 @@ describe('Login', () => {
   it('renders email and password inputs', () => {
     renderLogin();
     expect(document.querySelector('input[type="email"]')).toBeInTheDocument();
-    expect(document.querySelector('input[type="password"]')).toBeInTheDocument();
+    expect(
+      document.querySelector('input[type="password"]')
+    ).toBeInTheDocument();
   });
 
   it('renders a link to forgot password', () => {
@@ -99,6 +107,8 @@ describe('Login', () => {
   it('redirects authenticated users away from the login form', () => {
     mockUser = { _id: '1', name: 'Test User' };
     renderLogin();
-    expect(screen.queryByRole('button', { name: /login/i })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: /login/i })
+    ).not.toBeInTheDocument();
   });
 });

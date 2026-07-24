@@ -99,7 +99,11 @@ const Register = () => {
               required
             />
           </div>
-          <button type="submit" className="auth-submit-btn" disabled={isSubmitting}>
+          <button
+            type="submit"
+            className="auth-submit-btn"
+            disabled={isSubmitting}
+          >
             {isSubmitting ? 'Creating Account...' : 'Create Account'}
           </button>
         </form>

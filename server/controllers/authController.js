@@ -45,7 +45,11 @@ const loginUser = asyncHandler(async (req, res) => {
   const { email, username, password } = req.body;
   // Support login by either email or username, and accept both when provided.
   const user = await User.findOne(
-    email && username ? { $or: [{ email }, { username }] } : email ? { email } : { username }
+    email && username
+      ? { $or: [{ email }, { username }] }
+      : email
+        ? { email }
+        : { username },
   );
 
   if (user && (await user.matchPassword(password))) {

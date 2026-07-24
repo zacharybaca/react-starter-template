@@ -25,7 +25,9 @@ const ForgotPassword = () => {
     if (response.success || response.status === 404) {
       setSubmitted(true);
     } else {
-      toast.error(response.error || 'Could not send reset email. Please try again.');
+      toast.error(
+        response.error || 'Could not send reset email. Please try again.'
+      );
       setIsSubmitting(false);
     }
   };
@@ -35,7 +37,13 @@ const ForgotPassword = () => {
       <div className="auth-page-container">
         <div className="auth-card">
           <h2 className="auth-title">Check Your Email</h2>
-          <p style={{ color: 'whitesmoke', textAlign: 'center', marginBottom: '20px' }}>
+          <p
+            style={{
+              color: 'whitesmoke',
+              textAlign: 'center',
+              marginBottom: '20px',
+            }}
+          >
             If an account exists for <strong>{email}</strong>, a password reset
             link has been sent. The link expires in 10 minutes.
           </p>
@@ -53,8 +61,15 @@ const ForgotPassword = () => {
     <div className="auth-page-container">
       <div className="auth-card">
         <h2 className="auth-title">Forgot Password</h2>
-        <p style={{ color: 'whitesmoke', marginBottom: '24px', textAlign: 'center' }}>
-          Enter your email address and we&apos;ll send you a link to reset your password.
+        <p
+          style={{
+            color: 'whitesmoke',
+            marginBottom: '24px',
+            textAlign: 'center',
+          }}
+        >
+          Enter your email address and we&apos;ll send you a link to reset your
+          password.
         </p>
         <form onSubmit={handleSubmit}>
           <div className="auth-form-group">
@@ -66,7 +81,11 @@ const ForgotPassword = () => {
               required
             />
           </div>
-          <button type="submit" className="auth-submit-btn" disabled={isSubmitting}>
+          <button
+            type="submit"
+            className="auth-submit-btn"
+            disabled={isSubmitting}
+          >
             {isSubmitting ? 'Sending...' : 'Send Reset Link'}
           </button>
         </form>

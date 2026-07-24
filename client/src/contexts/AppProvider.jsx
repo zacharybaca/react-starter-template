@@ -7,13 +7,11 @@ export const AppProvider = ({ children }) => {
   return (
     <FetcherProvider>
       <AuthProvider>
-        <SocketProvider>
-          {children}
-        </SocketProvider>
+        <SocketProvider>{children}</SocketProvider>
       </AuthProvider>
     </FetcherProvider>
-  )
-}
+  );
+};
 
 AppProvider.propTypes = {
   children: PropTypes.node.isRequired,

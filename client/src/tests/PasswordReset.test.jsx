@@ -1,15 +1,22 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  act,
+} from '@testing-library/react';
 import { MemoryRouter, Routes, Route } from 'react-router-dom';
 import ForgotPassword from '../components/Auth/ForgotPassword/ForgotPassword';
 import ResetPassword from '../components/Auth/ResetPassword/ResetPassword';
 
-const { mockFetcher, mockNavigate, mockToastError, mockToastSuccess } = vi.hoisted(() => ({
-  mockFetcher: vi.fn(),
-  mockNavigate: vi.fn(),
-  mockToastError: vi.fn(),
-  mockToastSuccess: vi.fn(),
-}));
+const { mockFetcher, mockNavigate, mockToastError, mockToastSuccess } =
+  vi.hoisted(() => ({
+    mockFetcher: vi.fn(),
+    mockNavigate: vi.fn(),
+    mockToastError: vi.fn(),
+    mockToastSuccess: vi.fn(),
+  }));
 
 vi.mock('../hooks/useFetcher.js', () => ({
   useFetcher: () => ({ fetcher: mockFetcher }),
@@ -116,7 +123,9 @@ describe('Password reset flows', () => {
     fireEvent.click(screen.getByRole('button', { name: /reset password/i }));
 
     await waitFor(() => {
-      expect(screen.getByRole('button', { name: 'Resetting...' })).toBeDisabled();
+      expect(
+        screen.getByRole('button', { name: 'Resetting...' })
+      ).toBeDisabled();
     });
 
     expect(mockFetcher).toHaveBeenCalledWith(

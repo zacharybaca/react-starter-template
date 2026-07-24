@@ -47,7 +47,9 @@ const authLimiter = rateLimit({
   max: 20,
   standardHeaders: true,
   legacyHeaders: false,
-  message: { message: "Too many authentication attempts, please try again later." },
+  message: {
+    message: "Too many authentication attempts, please try again later.",
+  },
 });
 app.use("/api/auth", authLimiter);
 

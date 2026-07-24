@@ -1,5 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { render, screen, fireEvent, waitFor, act } from '@testing-library/react';
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  act,
+} from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import Register from '../components/Auth/Register/Register';
 
@@ -29,8 +35,12 @@ describe('Register', () => {
 
   it('renders the registration form', () => {
     renderRegister();
-    expect(screen.getByRole('heading', { name: 'Create Account' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /create account/i })).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: 'Create Account' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: /create account/i })
+    ).toBeInTheDocument();
   });
 
   it('renders all required input fields', () => {
@@ -75,6 +85,8 @@ describe('Register', () => {
   it('redirects authenticated users away from the registration form', () => {
     mockUser = { _id: '1', name: 'Test User' };
     renderRegister();
-    expect(screen.queryByRole('button', { name: /create account/i })).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: /create account/i })
+    ).not.toBeInTheDocument();
   });
 });
