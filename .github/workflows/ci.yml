@@ -57,7 +57,7 @@ jobs:
         run: npm ci
 
       - name: Lint (syntax check)
-        run: node --check app.js server.js controllers/*.js middleware/*.js models/*.js routes/*.js utils/*.js
+        run: node --check app.js server.js middleware/*.js tests/*.js
 
       - name: Test
         run: npm test

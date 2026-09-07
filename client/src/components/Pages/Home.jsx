@@ -1,4 +1,3 @@
-import React from 'react';
 import './home.css';
 
 const Home = () => {
@@ -7,15 +6,15 @@ const Home = () => {
       <section className="hero-section">
         <div className="container">
           <h1>
-            <span className="hero-accent">Name of App Goes Here</span>
+            <span className="hero-accent">MERN Boilerplate</span>
           </h1>
-          <p>Explanation of App or App Slogan Goes Here</p>
+          <p>Start building your app with a lightweight full-stack baseline.</p>
         </div>
       </section>
 
       <div className="page-content">
         <section className="all-companies-section">
-          <h2>This Component Wraps Around All Your Other Components</h2>
+          <h2>Includes React frontend, Express API, MongoDB connection, and custom fetcher.</h2>
         </section>
       </div>
     </div>
