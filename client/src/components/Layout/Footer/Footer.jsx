@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import './footer.css';
 
@@ -13,27 +12,15 @@ const Footer = () => {
             MERN<span className="logo-accent">Starter</span>
           </Link>
           <p className="footer-tagline">
-            A modern, production-ready React + Express starter template.
+            Lightweight React + Express + MongoDB starter template.
           </p>
-        </div>
-
-        <div className="footer-links-section">
-          <div className="footer-column">
-            <h4>App</h4>
-            <Link to="/">Home</Link>
-          </div>
-          <div className="footer-column">
-            <h4>Account</h4>
-            <Link to="/login">Login</Link>
-            <Link to="/register">Sign Up</Link>
-          </div>
         </div>
       </div>
 
       <div className="footer-bottom">
-        <p>&copy; {currentYear} MERN Starter. All rights reserved.</p>
+        <p>&copy; {currentYear} MERN Starter</p>
         <div className="footer-legal">
-          <span>Built with the MERN Stack</span>
+          <span>Built for MERN projects</span>
         </div>
       </div>
     </footer>
